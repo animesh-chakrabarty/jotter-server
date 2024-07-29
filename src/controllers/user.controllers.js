@@ -39,7 +39,30 @@ const handleSignup = async (req, res) => {
 
 const handleLogin = () => {};
 
-const handleOTPVerification = () => {};
+const handleOTPVerification = async (req, res) => {
+  const { userId } = req;
+  const { OTP } = req.body;
+
+  try {
+    // retrieve OTP from OTP collection
+    const userOTPData = await OTPModel.findOne({ userId });
+
+    // verify OTP
+    if (OTP == userOTPData.OTP) {
+      // delete OTP data
+      const delConfirmation = await OTPModel.findByIdAndDelete(userOTPData._id);
+
+      console.log(delConfirmation);
+      res
+        .status(200)
+        .json({ Error: false, message: "user verified successfully" });
+    } else {
+      throw new Error("OTP is incorrect");
+    }
+  } catch (error) {
+    res.status(400).json({ Error: true, message: error.message });
+  }
+};
 
 const fetchUserProfile = () => {};
 
