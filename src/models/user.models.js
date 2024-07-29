@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const hashText = require("../utils/hashText");
+const verifyHash = require("../utils/verifyHash");
 
 // user schema
 const userSchema = new mongoose.Schema({
@@ -43,7 +44,7 @@ userSchema.statics.signupUser = async function (
     throw new Error("password is not strong enough");
   }
   // check if mail already in use - DBlookup
-  const doesEmailExist = await this.findOne({email});
+  const doesEmailExist = await this.findOne({ email });
   if (doesEmailExist) {
     throw new Error("email already in use");
   }
@@ -60,6 +61,34 @@ userSchema.statics.signupUser = async function (
       email,
       password: hashedPass,
     });
+
+    return userCredentials;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+userSchema.statics.loginUser = async function (email, password) {
+  if (!email || !password) {
+    throw new Error("all fields must be filled");
+  }
+
+  if (!validator.isEmail(email)) {
+    throw new Error("email is not valid");
+  }
+
+  try {
+    const userCredentials = await this.findOne({ email });
+
+    if (!userCredentials) {
+      throw new Error("user doesn't exist");
+    }
+
+    const doesPassMatch = await verifyHash(password, userCredentials.password);
+
+    if (!doesPassMatch) {
+      throw new Error("password incorrect");
+    }
 
     return userCredentials;
   } catch (error) {

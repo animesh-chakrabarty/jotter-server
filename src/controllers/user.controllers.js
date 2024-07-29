@@ -37,7 +37,26 @@ const handleSignup = async (req, res) => {
   }
 };
 
-const handleLogin = () => {};
+const handleLogin = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // verfiy user credentials
+    const userCredentials = await userModel.loginUser(email, password);
+
+    // generate JWT
+    const token = generateJWT(userCredentials._id);
+
+    res.status(200).json({
+      Error: false,
+      email,
+      token,
+      message: "user logged in successfully",
+    });
+  } catch (error) {
+    res.status(400).json({ Error: true, message: error.message });
+  }
+};
 
 const handleOTPVerification = async (req, res) => {
   const { userId } = req;
@@ -52,7 +71,6 @@ const handleOTPVerification = async (req, res) => {
       // delete OTP data
       const delConfirmation = await OTPModel.findByIdAndDelete(userOTPData._id);
 
-      console.log(delConfirmation);
       res
         .status(200)
         .json({ Error: false, message: "user verified successfully" });
