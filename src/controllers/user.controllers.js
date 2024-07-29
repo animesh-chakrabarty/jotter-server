@@ -1,6 +1,8 @@
+const OTPModel = require("../models/OTP.models");
 const userModel = require("../models/user.models");
 const generateJWT = require("../utils/generateJWT");
 const generateOTP = require("../utils/generateOTP");
+const sendOTP = require("../utils/sendOTP");
 
 const handleSignup = async (req, res) => {
   // extract firstName, lastName, email, password
@@ -18,8 +20,18 @@ const handleSignup = async (req, res) => {
     // generate OTP
     const OTP = generateOTP();
     // send OTP
-    
-    res.status(200).json({ email, token });
+    const info = await sendOTP(email, OTP);
+    // save OTP to DB
+    const OTPDetails = await OTPModel.create({
+      userId: userCredentials._id,
+      OTP,
+    });
+    res.status(200).json({
+      Error: false,
+      email,
+      token,
+      message: `A mail with OTP has been sent to ${email}`,
+    });
   } catch (error) {
     res.status(400).json({ Error: true, message: error.message });
   }
