@@ -3,7 +3,7 @@ const verifyJWT = require("../utils/verifyJWT");
 
 const auth = async (req, res, next) => {
   try {
-    // extract authorization header
+    // destructure authorization header
     const { authorization } = req.headers;
 
     if (!authorization) {

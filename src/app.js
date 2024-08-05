@@ -5,6 +5,7 @@ const cors = require("cors");
 
 const userRouter = require("./routes/user.routes");
 const articleRouter = require("./routes/article.routes");
+const uploadRouter = require("./routes/upload.routes")
 
 const app = express();
 
@@ -18,12 +19,13 @@ app.use(
 // json parser middleware
 app.use(express.json({ limit: "16kb" }));
 // url parser middleware
-app.use(express.urlencoded({ extended: true, limit: "16kb" }));
+app.use(express.urlencoded({ extended: true}));
 app.use(express.static("public"));
 app.use(cookieParser());
 
 // routes
 app.use("/api/users", userRouter);
 app.use("/api/articles", articleRouter);
+app.use("/api/upload",uploadRouter)
 
 module.exports = app;

@@ -5,7 +5,7 @@ const generateOTP = require("../utils/generateOTP");
 const sendOTP = require("../utils/sendOTP");
 
 const handleSignup = async (req, res) => {
-  // extract firstName, lastName, email, password
+  // destructure firstName, lastName, email, password
   const { firstName, lastName, email, password } = req.body;
   try {
     // add user credentials to the DB

@@ -17,8 +17,8 @@ router.post("/signup", handleSignup);
 router.post("/login", handleLogin);
 router.post("/verify", auth, handleOTPVerification);
 
-// user routes
-router.get("/profile", fetchUserProfile, auth);
-router.get("/myarticles", fetchUserPublishes, auth);
+// account management routes
+router.get("/profile", auth, fetchUserProfile);
+router.get("/myarticles", auth, fetchUserPublishes);
 
 module.exports = router;

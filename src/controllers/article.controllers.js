@@ -2,7 +2,9 @@ const fetchFeaturedArticles = () => {};
 
 const fetchArticleById = () => {};
 
-const handleCreateArticle = () => {};
+const handleCreateArticle = (req, res) => {
+
+};
 
 const handleEditArticle = () => {};
 
